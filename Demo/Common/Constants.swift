@@ -23,6 +23,11 @@ let Flickr =
     "consumerKey": "",
     "consumerSecret": ""
 ]
+let Garmin =
+[
+    "consumerKey": "",
+    "consumerSecret": ""
+]
 let Github =
 [
     "consumerKey": "",

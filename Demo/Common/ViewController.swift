@@ -110,6 +110,8 @@ extension ViewController {
             doOAuthTwitter(parameters)
         case "Flickr":
             doOAuthFlickr(parameters)
+        case "Garmin":
+            doOAuthGarmin(parameters)
         case "Github":
             doOAuthGithub(parameters)
         case "Instagram":
@@ -328,6 +330,29 @@ extension ViewController {
                 print(error)
             }
         )
+    }
+
+    // MARK: Garmin
+    func doOAuthGarmin(_ serviceParameters: [String:String]){
+       let oauthswift = OAuth1Swift(
+          consumerKey:    serviceParameters["consumerKey"]!,
+          consumerSecret: serviceParameters["consumerSecret"]!,
+          requestTokenUrl: "https://connectapi.garmin.com/oauth-service-1.0/oauth/request_token",
+          authorizeUrl:"https://connect.garmin.com/oauthConfirm",
+          accessTokenUrl:"https://connectapi.garmin.com/oauth-service-1.0/oauth/access_token"
+       )
+
+       self.oauthswift = oauthswift
+       oauthswift.authorizeURLHandler = getURLHandler()
+       let _ = oauthswift.authorize(
+          withCallbackURL: URL(string: "oauth-swift://oauth-callback/garmin")!,
+          success: { credential, response, parameters in
+             self.showTokenAlert(name: serviceParameters["name"], credential: credential)
+       },
+          failure: { error in
+             print(error.description)
+       }
+       )
     }
     
     // MARK: Github
@@ -1380,6 +1405,7 @@ extension ViewController {
         services["Twitter"] = Twitter
         services["Salesforce"] = Salesforce
         services["Flickr"] = Flickr
+        services["Garmin"] = Garmin
         services["Github"] = Github
         services["Instagram"] = Instagram
         services["Foursquare"] = Foursquare
